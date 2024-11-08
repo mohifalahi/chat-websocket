@@ -1,4 +1,4 @@
-from rest_framework.serializers import Serializer, CharField
+from rest_framework.serializers import CharField, Serializer
 
 
 class BroadCastMessageSerializer(Serializer):
