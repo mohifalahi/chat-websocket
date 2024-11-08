@@ -7,6 +7,10 @@ from django.shortcuts import render
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.core.cache import cache
+import time
+
+import logging
+logger = logging.getLogger(__name__)
 
 
 def index(request):
@@ -23,7 +27,7 @@ class BroadCastAPIView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             message = serializer.validated_data["message"]
-            # print("Message to broadcast:", message)
+            logger.info(f"Message to broadcast: {message}")
 
         channel_layer = get_channel_layer()
 
@@ -34,9 +38,8 @@ class BroadCastAPIView(GenericAPIView):
                 "message": message
             }
         )
-        # print("Broadcast sent to group.")
+        logger.info("Broadcast sent to group.")
 
-        import time
         time.sleep(1)
         receiver_count = cache.get("receiver_count", 0)
         cache.clear()
