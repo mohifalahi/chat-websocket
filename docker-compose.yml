@@ -1,0 +1,25 @@
+services:
+  django:
+    build:
+      context: .
+      dockerfile: docker/dev/django/Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: on-failure
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+
+  test:
+    build:
+      context: .
+      dockerfile: docker/dev/pytest/Dockerfile
+    command: pytest test_app.py --disable-warnings
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    depends_on:
+      - django

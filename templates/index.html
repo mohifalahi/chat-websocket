@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <h1>WebSocket Chat</h1>
+    <ul id="messages"></ul>
+
+    <script>
+        const socket = new WebSocket("ws://" + window.location.host + "/ws/subscribe");
+
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            const messages = document.getElementById("messages");
+            const messageElement = document.createElement("li");
+            messageElement.textContent = data.message;
+            messages.appendChild(messageElement);
+        };
+
+        socket.onclose = function () {
+            console.error("WebSocket closed unexpectedly");
+        };
+
+    </script>
+</body>
+
+</html>
